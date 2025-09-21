@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Doubts Chat</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      height: 100vh;
+      background: #f3f4f6;
+      color: #333;
+    }
+
+    /* Sidebar Subjects */
+    .sidebar {
+      width: 220px;
+      background: #2c3e50;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 1px;
+      background: #34495e;
+      border-bottom: 1px solid #1a252f;
+    }
+
+    .subject {
+      padding: 15px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    .subject:hover {
+      background: #1abc9c;
+      color: #fff;
+    }
+
+    .subject span {
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    /* Chat Area */
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid #ccc;
+    }
+
+    .chat-header {
+      background: #16a085;
+      color: white;
+      padding: 18px 20px;
+      font-weight: 600;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: #ecf0f1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .message {
+      max-width: 70%;
+      margin: 10px 0;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .student {
+      background: #ffffff;
+      align-self: flex-start;
+      border-left: 4px solid #2980b9;
+    }
+
+    .teacher {
+      background: #d1f2eb;
+      align-self: flex-end;
+      border-right: 4px solid #16a085;
+    }
+
+    /* Input Areas */
+    .input-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background: #bdc3c7;
+      gap: 10px;
+    }
+
+    .input-box {
+      flex: 1;
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-box input {
+      flex: 1;
+      padding: 10px 15px;
+      border-radius: 25px;
+      border: 1px solid #95a5a6;
+      font-size: 14px;
+    }
+
+    .input-box button {
+      padding: 10px 18px;
+      border: none;
+      background: #16a085;
+      color: white;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+
+    .input-box button:hover {
+      background: #138d75;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Subjects -->
+  <div class="sidebar">
+    <h2>Subjects</h2>
+    <div class="subject" onclick="changeSubject('Math')"><span>📘</span>Math</div>
+    <div class="subject" onclick="changeSubject('Science')"><span>🔬</span>Science</div>
+    <div class="subject" onclick="changeSubject('English')"><span>📖</span>English</div>
+    <div class="subject" onclick="changeSubject('Hindi')"><span>📝</span>Hindi</div>
+    <div class="subject" onclick="changeSubject('Social Studies')"><span>🌍</span>Social Studies</div>
+    <div class="subject" onclick="changeSubject('Punjabi')"><span>📚</span>Punjabi</div>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="chat-container">
+    <div class="chat-header" id="chat-header">Math Doubts</div>
+    <div class="chat-box" id="chat-box">
+      <div class="message student">Sir, Algebra formula kaise yaad karein?</div>
+      <div class="message teacher">Beta, formulas practice karne se yaad ho jaate hain 🙂</div>
+    </div>
+
+    <!-- Two Input Boxes -->
+    <div class="input-container">
+      <!-- Student Input -->
+      <div class="input-box">
+        <input type="text" id="studentInput" placeholder="Student: Type your doubt...">
+        <button onclick="sendMessage('student')">Send</button>
+      </div>
+      <!-- Teacher Input -->
+      <div class="input-box">
+        <input type="text" id="teacherInput" placeholder="Teacher: Type your reply...">
+        <button onclick="sendMessage('teacher')">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function changeSubject(subject) {
+      document.getElementById("chat-header").innerText = subject + " Doubts";
+      document.getElementById("chat-box").innerHTML =
+        '<div class="message student">Hi, I have a doubt in ' + subject + '.</div>' +
+        '<div class="message teacher">Okay, please ask your question 🙂</div>';
+    }
+
+    function sendMessage(sender) {
+      let inputId = sender === "student" ? "studentInput" : "teacherInput";
+      let msg = document.getElementById(inputId).value.trim();
+      if (msg !== "") {
+        let div = document.createElement("div");
+        div.classList.add("message", sender);
+        div.innerText = msg;
+        document.getElementById("chat-box").appendChild(div);
+        document.getElementById(inputId).value = "";
+        document.getElementById("chat-box").scrollTop = document.getElementById("chat-box").scrollHeight;
+      }
+    }
+  </script>
+
+</body>
+</html>

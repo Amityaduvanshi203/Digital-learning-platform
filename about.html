@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nabha Website Sections</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f4f7fb;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #0b5ed7, #2b8cff);
+      color: white; padding: 20px; text-align: center;
+    }
+    header h1 { margin: 0; font-size: 28px; }
+    .sections {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .card:hover { transform: translateY(-8px); }
+    .card i {
+      font-size: 40px;
+      color: #0b5ed7;
+      margin-bottom: 12px;
+    }
+    .card h3 { margin: 10px 0; color: #0b5ed7; }
+    footer {
+      background: #0b5ed7;
+      color: white;
+      text-align: center;
+      padding: 16px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><i class="fa-solid fa-school"></i> Nabha Website Sections</h1>
+</header>
+
+<div class="sections">
+  <div class="card">
+    <i class="fa-solid fa-house"></i>
+    <h3>Home</h3>
+    <p>Banner, News, Notices & Announcements</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-book-open-reader"></i>
+    <h3>About</h3>
+    <p>History, Vision & Mission, Administration</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-graduation-cap"></i>
+    <h3>Academics</h3>
+    <p>Curriculum, Departments, Faculty, Library</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-user-graduate"></i>
+    <h3>Student</h3>
+    <p>Login, Timetable, Results, Notes</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-users"></i>
+    <h3>Parent</h3>
+    <p>Login, Fee Payment, Progress Reports</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-chalkboard-teacher"></i>
+    <h3>Teacher</h3>
+    <p>Class Management, Assignments, Reports</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-user-shield"></i>
+    <h3>Admin</h3>
+    <p>Manage Students & Teachers, Reports</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-calendar-days"></i>
+    <h3>Events & Gallery</h3>
+    <p>Upcoming Events, Photos & Videos</p>
+  </div>
+
+  <div class="card">
+    <i class="fa-solid fa-circle-question"></i>
+    <h3>Help & Support</h3>
+    <p>FAQs, Contact Form, Live Chat</p>
+  </div>
+
+  <!-- New Feature Section -->
+  <div class="card">
+    <i class="fa-solid fa-star"></i>
+    <h3>Features</h3>
+    <p>Smart Attendance, E-Library, Online Classes, Notifications</p>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Nabha Website. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes & PDFs Resource Library with Uploads</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f4f7fb;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .search-box {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .search-box input {
+      width: 50%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .subject {
+      background: #fff;
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .subject h2 {
+      margin: 0 0 10px;
+      color: #007bff;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin: 8px 0;
+      padding: 8px;
+      background: #f9f9f9;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
+      text-decoration: none;
+      padding: 6px 12px;
+      background: #28a745;
+      color: white;
+      border-radius: 5px;
+      margin-left: 8px;
+      font-size: 14px;
+    }
+    .btn:hover {
+      background: #218838;
+    }
+    .upload-section {
+      margin-top: 15px;
+      padding: 10px;
+      border-top: 1px dashed #ccc;
+    }
+    .upload-section input {
+      margin: 5px 0;
+    }
+    textarea {
+      width: 100%;
+      height: 80px;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+    button {
+      padding: 8px 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    
+    .notes {
+      margin-top: 40px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+     #pdfList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .subject {
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    flex: 0 1 calc(50% - 20px); /* 2 subjects per row */
+    box-sizing: border-box;
+  }
+
+  @media (max-width: 768px) {
+    .subject {
+      flex: 0 1 100%; /* single column on smaller screens */
+    }
+  }
+  </style>
+</head>
+<body>
+
+  <h1>📚 Notes & PDFs Resource Library</h1>
+
+  <!-- Search Box -->
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search Subject or Lesson...">
+  </div>
+
+  <!-- Subjects -->
+  <div id="pdfList">
+
+    <!-- Example Subject -->
+    <div class="subject" data-subject="Math">
+      <h2>Math</h2>
+      <ul id="mathList">
+        <li>Lesson 1 - 
+          <div>
+            <a href="math.pdf" target="_blank" class="btn">View</a>
+            <a href="math.pdf" download class="btn">Download</a>
+          </div>
+        </li>
+      </ul>
+
+      <!-- Upload Section -->
+      <div class="upload-section">
+        <p><b>Upload PDF ( Student Homework)</b></p>
+        <input type="file" id="mathUpload" accept="application/pdf">
+        <button onclick="uploadPDF('Math')">Upload</button>
+         </div>
+      
+
+      <!-- Notes Section (by subject) -->
+      <textarea id="notesMath" placeholder="Write your Math notes here..."></textarea>
+      <button onclick="saveNotes('Math')">Save Notes</button>
+    </div>
+
+    <!-- Repeat subjects same way -->
+    <div class="subject" data-subject="Science">
+      <h2>Science</h2>
+       <li>Lesson 1 - 
+          <div>
+            <a href="so.pdf" target="_blank" class="btn">View</a>
+            <a href="so.pdf" download class="btn">Download</a>
+          </div>
+        </li>
+      </ul>
+      <ul id="scienceList"></ul>
+      <div class="upload-section">
+        <p><b>Upload PDF ( Student Homework)</b></p>
+        <input type="file" id="scienceUpload" accept="application/pdf">
+        <button onclick="uploadPDF('Science')">Upload</button>
+      </div>
+      <textarea id="notesScience" placeholder="Write your Science notes here..."></textarea>
+      <button onclick="saveNotes('Science')">Save Notes</button>
+    </div>
+
+    <div class="subject" data-subject="Physics">
+      <h2>Physics</h2>
+       <li>Lesson 1 -  
+          <div>
+            <a href="pdfs/math_algebra.pdf" target="_blank" class="btn">View</a>
+            <a href="pdfs/math_algebra.pdf" download class="btn">Download</a>
+          </div>
+        </li>
+      </ul>
+      <ul id="physicsList"></ul>
+      <div class="upload-section">
+        <p><b>Upload PDF ( Student Homework)</b></p>
+        <input type="file" id="physicsUpload" accept="application/pdf">
+        <button onclick="uploadPDF('Physics')">Upload</button>
+      </div>
+      <textarea id="notesPhysics" placeholder="Write your Physics notes here..."></textarea>
+      <button onclick="saveNotes('Physics')">Save Notes</button>
+    </div>
+
+    <div class="subject" data-subject="English">
+      <h2>English</h2>
+       <li>Lesson 1 - 
+          <div>
+            <a href="pdfs/math_algebra.pdf" target="_blank" class="btn">View</a>
+            <a href="pdfs/math_algebra.pdf" download class="btn">Download</a>
+          </div>
+        </li>
+      </ul>
+      <ul id="englishList"></ul>
+      <div class="upload-section">
+        <p><b>Upload PDF ( Student Homework)</b></p>
+        <input type="file" id="englishUpload" accept="application/pdf">
+        <button onclick="uploadPDF('English')">Upload</button>
+      </div>
+      <textarea id="notesEnglish" placeholder="Write your English notes here..."></textarea>
+      <button onclick="saveNotes('English')">Save Notes</button>
+    </div>
+
+    <div class="subject" data-subject="Hindi">
+      <h2>Hindi</h2>
+       <li>Lesson 1 - 
+          <div>
+            <a href="pdfs/math_algebra.pdf" target="_blank" class="btn">View</a>
+            <a href="pdfs/math_algebra.pdf" download class="btn">Download</a>
+          </div>
+        </li>
+      </ul>
+      <ul id="hindiList"></ul>
+      <div class="upload-section">
+        <p><b>Upload PDF ( Student Homework)</b></p>
+        <input type="file" id="hindiUpload" accept="application/pdf">
+        <button onclick="uploadPDF('Hindi')">Upload</button>
+      </div>
+      <textarea id="notesHindi" placeholder="Write your Hindi notes here..."></textarea>
+      <button onclick="saveNotes('Hindi')">Save Notes</button>
+    </div>
+
+    <div class="subject" data-subject="Punjabi">
+      <h2>Punjabi</h2>
+       <li>Lesson 1 - 
+          <div>
+            <a href="pdfs/math_algebra.pdf" target="_blank" class="btn">View</a>
+            <a href="pdfs/math_algebra.pdf" download class="btn">Download</a>
+          </div>
+        </li>
+      </ul>
+      <ul id="punjabiList"></ul>
+      <div class="upload-section">
+        <p><b>Upload PDF ( Student Homework)</b></p>
+        <input type="file" id="punjabiUpload" accept="application/pdf">
+        <button onclick="uploadPDF('Punjabi')">Upload</button>
+      </div>
+      <textarea id="notesPunjabi" placeholder="Write your Punjabi notes here..."></textarea>
+      <button onclick="saveNotes('Punjabi')">Save Notes</button>
+    </div>
+  </div>
+
+  <!-- Common Notes -->
+  <div class="notes">
+    <h2>📝 Common Notes</h2>
+     <li>Any-subject 
+          <div>
+            <a href="pdfs/math_algebra.pdf" target="_blank" class="btn">View</a>
+            <a href="pdfs/math_algebra.pdf" download class="btn">Download</a>
+          </div>
+        </li>
+      </ul>
+    <textarea id="notesCommon" placeholder="Write your general notes here..."></textarea>
+    <button onclick="saveNotes('Common')">Save Common Notes</button>
+  </div>
+
+  <script>
+    // Search filter
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+      let filter = this.value.toLowerCase();
+      let items = document.querySelectorAll("#pdfList .subject");
+      items.forEach(function(subject) {
+        let text = subject.textContent.toLowerCase();
+        subject.style.display = text.includes(filter) ? "" : "none";
+      });
+    });
+
+    // Upload PDF (demo - just add to list)
+    function uploadPDF(subject) {
+      let input = document.getElementById(subject.toLowerCase()+"Upload");
+      if (input.files.length > 0) {
+        let file = input.files[0];
+        let listId = subject.toLowerCase() + "List";
+        let ul = document.getElementById(listId);
+
+        let li = document.createElement("li");
+        li.innerHTML = file.name + 
+          `<div>
+            <a href="#" class="btn">View</a>
+            <a href="#" class="btn">Download</a>
+          </div>`;
+        ul.appendChild(li);
+
+        alert(subject + " PDF uploaded: " + file.name);
+      }
+    }
+
+    // Save Notes by subject
+    function saveNotes(subject) {
+      let id = "notes" + subject;
+      let notes = document.getElementById(id).value;
+      localStorage.setItem("notes_" + subject, notes);
+      alert(subject + " Notes Saved!");
+    }
+
+    // Load saved notes
+    window.onload = function() {
+      ["Math","Science","Physics","English","Hindi","Punjabi","Common"].forEach(function(sub){
+        let saved = localStorage.getItem("notes_" + sub);
+        if (saved) {
+          document.getElementById("notes"+sub).value = saved;
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

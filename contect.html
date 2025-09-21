@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Contact — Digital Learning Platform (Compact)</title>
+  <style>
+    :root{
+      --accent:#0073e6;
+      --muted:#6b7280;
+      --bg:#f5f6fa;
+      --card:#ffffff;
+      --err:#d9534f;
+      --success:#2d9f67;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:#222;
+      font-size:13px; /* compact */
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .wrap{
+      max-width:980px;
+      margin:22px auto;
+      padding:14px;
+      display:grid;
+      grid-template-columns:1fr 380px;
+      gap:14px;
+    }
+
+    header{grid-column:1/-1; display:flex; align-items:center; gap:12px;}
+    header .title{
+      background:linear-gradient(90deg,var(--accent),#005bb5);
+      color:#fff;
+      padding:10px 14px;
+      border-radius:8px;
+      font-weight:600;
+      font-size:15px;
+      box-shadow:0 4px 10px rgba(2,6,23,0.06);
+    }
+    header .sub{color:var(--muted); font-size:12px}
+
+    .card{
+      background:var(--card);
+      border-radius:8px;
+      padding:12px;
+      box-shadow:0 4px 10px rgba(2,6,23,0.04);
+    }
+
+    /* Info column */
+    .info h3{margin:0 0 8px; font-size:14px; color:var(--accent)}
+    .info p{margin:6px 0; color:#222; line-height:1.35}
+    .small{font-size:12px; color:var(--muted)}
+
+    /* Compact map */
+    .map{width:100%; height:120px; border-radius:6px; overflow:hidden; margin-top:8px}
+    .map iframe{width:100%; height:100%; border:0}
+
+    /* Form column */
+    form label{display:block; font-size:12px; margin-bottom:6px; color:#222}
+    .field{margin-bottom:10px}
+    input[type="text"], input[type="email"], input[type="tel"], textarea, select{
+      width:100%;
+      padding:8px 10px;
+      border:1px solid #d1d5db;
+      border-radius:6px;
+      font-size:13px;
+      box-sizing:border-box;
+      outline:none;
+    }
+    input:focus, textarea:focus{border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,115,230,0.08)}
+    textarea{min-height:110px; resize:vertical}
+
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+
+    .error{color:var(--err); font-size:12px; margin-top:6px}
+    .hint{font-size:12px; color:var(--muted); margin-top:6px}
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px; padding:8px 12px; border-radius:6px; border:0; cursor:pointer;
+      background:var(--accent); color:#fff; font-weight:600; font-size:13px;
+    }
+    .btn[disabled]{opacity:0.6; cursor:default}
+
+    .status{
+      padding:8px 10px; border-radius:6px; font-size:13px; display:none;
+      margin-bottom:8px;
+    }
+    .status.show{display:block}
+    .status.success{background:rgba(45,159,103,0.12); color:var(--success); border:1px solid rgba(45,159,103,0.16)}
+    .status.fail{background:rgba(217,83,79,0.06); color:var(--err); border:1px solid rgba(217,83,79,0.12)}
+
+    /* compact footer small note */
+    .tiny{font-size:11px; color:var(--muted); margin-top:8px}
+
+    @media (max-width:880px){
+      .wrap{grid-template-columns:1fr; padding:12px}
+      header{flex-direction:column; align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <header>
+      <div class="title">Contact — Digital Learning Platform</div>
+      <div class="sub">Questions? Suggestions? Fill the form below or contact us directly via phone/email.</div>
+    </header>
+
+    <!-- LEFT: contact info -->
+    <section class="card info">
+      <h3>Helpline</h3>
+      <p><strong>Support:</strong> <a href="tel:+919876543210">+91 98765 43210</a></p>
+      <p><strong>Helpline:</strong> <a href="tel:+919123456789">+91 91234 56789</a></p>
+      <p><strong>Emergency:</strong> 1800-123-456</p>
+
+      <h3 style="margin-top:12px">Email</h3>
+      <p><strong>General:</strong> <a href="mailto:support@digitallearn.com">support@digitallearn.com</a></p>
+      <p><strong>Technical:</strong> <a href="mailto:tech@digitallearn.com">tech@digitallearn.com</a></p>
+
+      <h3 style="margin-top:12px">Office</h3>
+      <p class="small">Digital Learning Platform HQ — 2nd Floor, Knowledge Tower, New Delhi, India</p>
+      <div class="map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!" loading="lazy"></iframe></div>
+      <p class="tiny">Note: The form only performs UI/validation — to actually send messages, add a backend endpoint or use the "Send via Email Client" option.</p>
+    </section>
+
+    <!-- RIGHT: contact form -->
+    <aside class="card">
+      <form id="contactForm" novalidate>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+
+        <div class="row">
+          <div class="field">
+            <label for="name">Name <span class="small">*</span></label>
+            <input id="name" name="name" type="text" placeholder="Your name" required autocomplete="name" />
+            <div id="err-name" class="error" aria-live="assertive"></div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email <span class="small">*</span></label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" required autocomplete="email" />
+            <div id="err-email" class="error" aria-live="assertive"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" autocomplete="tel" />
+            <div id="err-phone" class="error" aria-live="assertive"></div>
+          </div>
+
+          <div class="field">
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" placeholder="(optional)" />
+            <div id="err-subject" class="error" aria-live="assertive"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="message">Message <span class="small">*</span></label>
+          <textarea id="message" name="message" placeholder="Write your message..." required></textarea>
+          <div id="err-message" class="error" aria-live="assertive"></div>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; margin-top:6px">
+          <button id="submitBtn" class="btn" type="submit">Send Message</button>
+          <button id="mailBtn" type="button" class="btn" style="background:#3b82f6">Send via Email Client</button>
+        </div>
+
+        <div class="tiny">* Required fields</div>
+      </form>
+    </aside>
+
+  </div>
+
+  <script>
+    (function(){
+      const form = document.getElementById('contactForm');
+      const statusEl = document.getElementById('status');
+      const submitBtn = document.getElementById('submitBtn');
+      const mailBtn = document.getElementById('mailBtn');
+
+      const showError = (id, msg) => { document.getElementById('err-'+id).textContent = msg || ''; };
+      const clearErrors = () => { ['name','email','phone','subject','message'].forEach(i=>showError(i,'')); statusEl.className='status'; statusEl.textContent=''; };
+
+      const validateEmail = (em) => /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(em);
+      const validatePhone = (ph) => {
+        if(!ph) return true; 
+        return /^\\+?[0-9\\s\\-()]{7,18}$/.test(ph.trim());
+      };
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        clearErrors();
+
+        const name = form.name.value.trim();
+        const email = form.email.value.trim();
+        const phone = form.phone.value.trim();
+        const subject = form.subject.value.trim();
+        const message = form.message.value.trim();
+
+        let ok = true;
+        if(name.length < 2){ showError('name','Please enter at least 2 characters'); ok=false; }
+        if(!validateEmail(email)){ showError('email','Please enter a valid email'); ok=false; }
+        if(!validatePhone(phone)){ showError('phone','Please enter a valid phone number'); ok=false; }
+        if(message.length < 8){ showError('message','Message must be at least 8 characters long'); ok=false; }
+
+        if(!ok){ 
+          statusEl.className='status fail show'; 
+          statusEl.textContent='Please correct the errors above.'; 
+          return; 
+        }
+
+        submitBtn.disabled = true; submitBtn.textContent = 'Sending...';
+        statusEl.className='status show'; 
+        statusEl.textContent = 'Sending your message... Please wait.';
+
+        setTimeout(()=>{
+          statusEl.className='status success show';
+          statusEl.textContent = 'Thank you! Your message has been received. We will respond shortly.';
+          submitBtn.disabled = false; submitBtn.textContent = 'Send Message';
+          form.reset();
+        }, 900);
+      });
+
+      mailBtn.addEventListener('click', function(){
+        clearErrors();
+        const name = encodeURIComponent(form.name.value.trim());
+        const email = encodeURIComponent(form.email.value.trim());
+        const phone = encodeURIComponent(form.phone.value.trim());
+        const subject = encodeURIComponent(form.subject.value.trim() || 'Contact from website');
+        const message = encodeURIComponent('\\nName: '+name+'\\nEmail: '+email+'\\nPhone: '+phone+'\\n\\nMessage:\\n'+form.message.value.trim());
+        const to = 'support@digitallearn.com';
+        const mailto = `mailto:${to}?subject=${subject}&body=${message}`;
+        window.location.href = mailto;
+      });
+
+      Array.from(form.elements).forEach(el=>{
+        el.addEventListener('input', ()=>{
+          statusEl.className='status'; 
+          statusEl.textContent=''; 
+          if(el.name) document.getElementById('err-'+el.name).textContent='';
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

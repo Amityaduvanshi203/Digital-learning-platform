@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Teacher Dashboard — Digital Learning Platform</title>
+  <!-- CDN: Chart.js, jsPDF, XLSX (SheetJS) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <style>
+    :root{
+      --bg:#f6f8fb; --card:#ffffff; --accent:#4f46e5; --muted:#6b7280;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--bg);color:#111}
+    .container{max-width:1200px;margin:28px auto;padding:20px}
+    .grid{display:grid;gap:20px}
+    .grid.cols-3{grid-template-columns:260px 1fr 360px}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+    h1{font-size:20px;margin:0}
+    .muted{color:var(--muted)}
+
+    /* Sidebar */
+    nav .section{margin-bottom:12px}
+    nav button{display:block;width:100%;text-align:left;padding:10px;border-radius:8px;border:0;background:transparent;cursor:pointer}
+    nav button.active{background:rgba(79,70,229,0.08);color:var(--accent)}
+
+    /* Forms and inputs */
+    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e9ef;font-size:14px}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    .row{display:flex;gap:12px}
+    .row .col{flex:1}
+    .btn{padding:10px 12px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+    .btn.secondary{background:#fff;color:var(--accent);border:1px solid rgba(79,70,229,0.12)}
+
+    /* Tables */
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{padding:10px;border-bottom:1px solid #f1f3f8;text-align:left}
+    th{font-weight:600;color:var(--muted)}
+
+    /* Small utilities */
+    .flex{display:flex;align-items:center;gap:8px}
+    .right{margin-left:auto}
+    .pill{padding:6px 8px;border-radius:999px;background:#eef2ff;color:var(--accent);font-weight:600;font-size:13px}
+    .chart-wrap{height:220px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Teacher Dashboard — Digital Learning Platform</h1>
+        <div class="muted">Manage courses, attendance, grades, analytics & reports</div>
+      </div>
+      <div class="flex">
+        <button class="btn" onclick="exportAllPDF()">Download PDF Reports</button>
+        <button class="btn secondary" onclick="exportGradesExcel()">Export Grades (Excel)</button>
+      </div>
+    </header>
+
+    <div class="grid cols-3">
+      <!-- SIDEBAR -->
+      <aside class="card" style="height:fit-content">
+        <nav>
+          <div class="section">
+            <button class="active" onclick="showPanel('upload')">Upload Lessons</button>
+            <button onclick="showPanel('course')">Course Builder</button>
+            <button onclick="showPanel('analytics')">Class Analytics</button>
+            <button onclick="showPanel('attendance')">Attendance Tracker</button>
+            <button onclick="showPanel('gradebook')">Gradebook</button>
+            <button onclick="showPanel('training')">Teacher Training</button>
+            <button onclick="showPanel('reports')">Download Reports</button>
+           
+          </div>
+        </nav>
+      </aside>
+
+      <!-- MAIN CONTENT -->
+      <main>
+       
+        <!-- Upload Lessons -->
+        <section id="upload" class="card panel">
+          <h3>Upload Lessons (PDF / Video / PPT / Quiz)</h3>
+          <div class="muted" style="margin-bottom:12px">Add files and basic meta so lessons appear in the Lesson Library</div>
+          <label>Subject</label>
+          <select id="uploadCourse"><option>-- Select course --</option></select>
+
+          <label>Lesson Title</label>
+          <input id="lessonTitle" placeholder="e.g. Introduction to 8051" />
+
+          <label>Upload File</label>
+          <input type="file" id="lessonFile" />
+
+          <label>Type</label>
+          <select id="lessonType"><option>PDF</option><option>Video</option><option>PPT</option><option>Quiz</option></select>
+
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn" onclick="uploadLesson()">Upload Lesson</button>
+            <button class="btn secondary" onclick="clearUpload()">Clear</button>
+          </div>
+          <div id="uploadMsg" style="margin-top:10px;color:green;font-weight:600"></div>
+        </section>
+
+        <!-- Course Builder -->
+        <section id="course" class="card panel" style="display:none">
+          <h3>Course Builder</h3>
+          <div class="muted">Create course, add modules, assignments, and schedule live classes</div>
+
+          <label>New Course Name</label>
+          <input id="newCourseName" placeholder="e.g. Embedded Systems — I" />
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" onclick="createCourse()">Create New Course</button>
+            <button class="btn secondary" onclick="loadCourses()">Refresh Courses</button>
+          </div>
+
+          <hr style="margin:16px 0" />
+
+          <label>Select Course</label>
+          <select id="builderCourse"></select>
+
+          <div style="margin-top:8px">
+            <label>Module Title</label>
+            <input id="moduleTitle" placeholder="e.g. Module 1 — Basics" />
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button class="btn" onclick="addModule()">Add Module</button>
+              <button class="btn secondary" onclick="renderModules()">Show Modules</button>
+            </div>
+            <div id="modulesList" style="margin-top:12px"></div>
+          </div>
+
+          <hr style="margin:16px 0" />
+          <h4>Schedule Live Class</h4>
+          <label>Title</label>
+          <input id="liveTitle" placeholder="Revision Session" />
+          <div class="row" style="margin-top:8px">
+            <div class="col"><label>Date</label><input id="liveDate" type="date" /></div>
+            <div class="col"><label>Time</label><input id="liveTime" type="time" /></div>
+          </div>
+          <label>Notes / Link</label>
+          <input id="liveLink" placeholder="Zoom/Meet link or notes" />
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" onclick="scheduleClass()">Schedule</button>
+          </div>
+          <div id="liveMsg" style="margin-top:10px;color:green;font-weight:600"></div>
+        </section>
+
+        <!-- Analytics -->
+        <section id="analytics" class="card panel" style="display:none">
+          <h3>Class Performance Analytics</h3>
+          <div class="muted">Student progress, quiz results, and comparative insights</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+            <div class="card">
+              <div class="flex"><strong>Overall Progress</strong><div class="pill right" id="avgProgress">0%</div></div>
+              <div class="chart-wrap"><canvas id="progressChart"></canvas></div>
+            </div>
+            <div class="card">
+              <div class="flex"><strong>Quiz Scores Distribution</strong></div>
+              <div class="chart-wrap"><canvas id="scoreChart"></canvas></div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px" class="card">
+            <h4>Comparative Class Insights</h4>
+            <table>
+              <thead><tr><th>Class</th><th>Avg Progress</th><th>Avg Quiz Score</th></tr></thead>
+              <tbody id="comparativeTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Attendance -->
+        <section id="attendance" class="card panel" style="display:none">
+          <h3>Attendance Tracker</h3>
+          <div class="muted">Mark attendance, auto-generate sheets, and view trends</div>
+
+          <label>Select Class</label>
+          <select id="attCourse"></select>
+          <div style="display:flex;gap:8px;margin-top:8px;align-items:end">
+            <div style="flex:1"><label>Date</label><input id="attDate" type="date" /></div>
+            <div style="flex:2"><label>Students (comma-separated names)</label><input id="attStudents" placeholder="Amit, Ravi, Sunita" /></div>
+            <div style="width:130px"><button class="btn" onclick="markAttendance()">Mark Attendance</button></div>
+          </div>
+
+          <div style="margin-top:12px">
+            <h4>Attendance Sheet</h4>
+            <table>
+              <thead><tr><th>Name</th><th>Date</th><th>Status</th></tr></thead>
+              <tbody id="attendanceSheet"></tbody>
+            </table>
+          </div>
+
+          <div style="margin-top:12px" class="card">
+            <h4>Attendance Trends</h4>
+            <div class="chart-wrap"><canvas id="attTrend"></canvas></div>
+          </div>
+        </section>
+
+        <!-- Gradebook -->
+        <section id="gradebook" class="card panel" style="display:none">
+          <h3>Gradebook</h3>
+          <div class="muted">Enter grades, view student-wise reports and export</div>
+
+          <div class="row">
+            <div class="col">
+              <label>Select Course</label>
+              <select id="gradeCourse"></select>
+            </div>
+            <div class="col">
+              <label>Student Name</label>
+              <input id="gradeStudent" placeholder="e.g. Sunita" />
+            </div>
+            <div class="col">
+              <label>Score</label>
+              <input id="gradeScore" type="number" min="0" max="100" />
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" onclick="addGrade()">Add / Update Grade</button>
+            <button class="btn secondary" onclick="renderGrades()">Show Gradebook</button>
+          </div>
+
+          <div style="margin-top:12px">
+            <table>
+              <thead><tr><th>Student</th><th>Course</th><th>Score</th></tr></thead>
+              <tbody id="gradeTable"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Training -->
+        <section id="training" class="card panel" style="display:none">
+          <h3>Teacher Training Resources</h3>
+          <ul>
+            <li><a href="#">Upcoming Webinars</a></li>
+            <li><a href="#">e-Learning Modules</a></li>
+            <li><a href="#">Best Practices & Guides</a></li>
+          </ul>
+        </section>
+
+        <!-- Reports -->
+        <section id="reports" class="card panel" style="display:none">
+          <h3>Download PDF Reports</h3>
+          <div class="muted">Generate class-level and individual student reports</div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn" onclick="downloadClassReport()">Class Report (PDF)</button>
+            <button class="btn" onclick="downloadStudentReport()">Individual Student (PDF)</button>
+            <button class="btn secondary" onclick="downloadAttendanceGradesSummary()">Attendance & Grades Summary</button>
+          </div>
+        </section>
+      </main>
+
+      <!-- RIGHT COLUMN: Quick stats and lists -->
+      <aside>
+        <div class="card" style="margin-bottom:12px">
+          <div class="flex"><strong>Quick Stats</strong></div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <div style="flex:1"><div class="muted">Courses</div><div id="statCourses">0</div></div>
+            <div style="flex:1"><div class="muted">Students</div><div id="statStudents">0</div></div>
+            <div style="flex:1"><div class="muted">Avg Score</div><div id="statAvg">0</div></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:12px">
+          <h4>Upcoming Live Classes</h4>
+          <div id="upcomingList"></div>
+        </div>
+
+        <div class="card">
+          <h4>Recent Uploads</h4>
+          <div id="recentUploads"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Simple in-memory data stores (replace with real backend calls)
+    const DATA = {
+      courses: [],
+      modules: {},
+      lessons: [],
+      liveClasses: [],
+      attendance: [],
+      grades: []
+    };
+
+    // Utilities
+    function showPanel(id){
+      document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+      document.getElementById(id).style.display = '';
+      document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b=>{ if(b.textContent.trim().toLowerCase().includes(id)) b.classList.add('active') });
+    }
+
+    // Course builder
+    function createCourse(){
+      const name = document.getElementById('newCourseName').value.trim();
+      if(!name) return alert('Provide a course name');
+      DATA.courses.push({id:Date.now(),name});
+      DATA.modules[name] = [];
+      document.getElementById('newCourseName').value='';
+      loadCourses();
+      renderStats();
+      alert('Course created: ' + name);
+    }
+    function loadCourses(){
+      const selects = ['uploadCourse','builderCourse','attCourse','gradeCourse'];
+      selects.forEach(id=>{
+        const el = document.getElementById(id);
+        el.innerHTML = '<option value="">-- Select --</option>';
+        DATA.courses.forEach(c=> el.insertAdjacentHTML('beforeend',`<option value="${c.name}">${c.name}</option>`));
+      });
+    }
+    function addModule(){
+      const course = document.getElementById('builderCourse').value;
+      const title = document.getElementById('moduleTitle').value.trim();
+      if(!course) return alert('Select a course');
+      if(!title) return alert('Enter module title');
+      DATA.modules[course].push({id:Date.now(),title});
+      document.getElementById('moduleTitle').value='';
+      renderModules();
+    }
+    function renderModules(){
+      const course = document.getElementById('builderCourse').value;
+      const out = document.getElementById('modulesList');
+      out.innerHTML = '';
+      if(!course) return out.innerHTML = '<div class="muted">Select course to view modules</div>';
+      const list = DATA.modules[course] || [];
+      if(list.length===0) out.innerHTML = '<div class="muted">No modules yet</div>';
+      list.forEach(m=> out.insertAdjacentHTML('beforeend',`<div style="padding:8px;border:1px dashed #eef;margin-bottom:6px;border-radius:8px">${m.title}</div>`));
+    }
+
+    // Upload lessons
+    function uploadLesson(){
+      const course = document.getElementById('uploadCourse').value;
+      const title = document.getElementById('lessonTitle').value.trim();
+      const file = document.getElementById('lessonFile').files[0];
+      const type = document.getElementById('lessonType').value;
+      if(!course || !title || !file) return alert('Select course, add title and upload a file');
+      DATA.lessons.push({id:Date.now(),course,title,filename:file.name,type,uploadedAt:new Date().toISOString()});
+      document.getElementById('uploadMsg').textContent = 'Uploaded: ' + file.name;
+      document.getElementById('lessonTitle').value=''; document.getElementById('lessonFile').value='';
+      renderRecentUploads();
+      renderStats();
+    }
+    function clearUpload(){ document.getElementById('lessonTitle').value=''; document.getElementById('lessonFile').value=''; document.getElementById('uploadMsg').textContent=''; }
+
+    // Live classes
+    function scheduleClass(){
+      const course = document.getElementById('builderCourse').value || (DATA.courses[0] && DATA.courses[0].name);
+      const title = document.getElementById('liveTitle').value.trim();
+      const date = document.getElementById('liveDate').value;
+      const time = document.getElementById('liveTime').value;
+      const link = document.getElementById('liveLink').value.trim();
+      if(!title || !date || !time) return alert('Provide title, date and time');
+      DATA.liveClasses.push({id:Date.now(),course:title,datetime:date + ' ' + time,link});
+      document.getElementById('liveMsg').textContent = 'Live class scheduled: ' + title;
+      renderUpcoming();
+    }
+    function renderUpcoming(){
+      const el = document.getElementById('upcomingList'); el.innerHTML='';
+      DATA.liveClasses.slice(-5).forEach(c=> el.insertAdjacentHTML('beforeend',`<div style="padding:8px;border-bottom:1px solid #f1f3f8">${c.course} — <div class="muted">${c.datetime}</div></div>`));
+    }
+
+    // Attendance
+    function markAttendance(){
+      const course = document.getElementById('attCourse').value;
+      const date = document.getElementById('attDate').value;
+      const studentsRaw = document.getElementById('attStudents').value.trim();
+      if(!course || !date || !studentsRaw) return alert('Select class, date and students');
+      const names = studentsRaw.split(',').map(s=>s.trim()).filter(Boolean);
+      names.forEach(n=> DATA.attendance.push({id:Date.now()+Math.random(),course,name:n,date,status:'Present'}));
+      renderAttendanceSheet(); renderAttendanceTrend(); renderStats();
+    }
+    function renderAttendanceSheet(){
+      const tbody = document.getElementById('attendanceSheet'); tbody.innerHTML='';
+      DATA.attendance.slice().reverse().forEach(a=> tbody.insertAdjacentHTML('beforeend',`<tr><td>${a.name}</td><td>${a.date}</td><td>${a.status}</td></tr>`));
+    }
+    function renderAttendanceTrend(){
+      const ctx = document.getElementById('attTrend').getContext('2d');
+      const counts = {};
+      DATA.attendance.forEach(a=> counts[a.date] = (counts[a.date]||0) + 1);
+      const labels = Object.keys(counts).slice(-10);
+      const data = labels.map(d=>counts[d]);
+      if(window.attChart) window.attChart.destroy();
+      window.attChart = new Chart(ctx, {type:'line',data:{labels,dataSets:data,labels:labels, datasets:[{label:'Attendance',data}]}, options:{responsive:true}});
+    }
+
+    // Gradebook
+    function addGrade(){
+      const course = document.getElementById('gradeCourse').value;
+      const student = document.getElementById('gradeStudent').value.trim();
+      const score = Number(document.getElementById('gradeScore').value);
+      if(!course || !student || isNaN(score)) return alert('Provide course, student, and score');
+      // Upsert
+      const idx = DATA.grades.findIndex(g=>g.course===course && g.student===student);
+      if(idx>=0) DATA.grades[idx].score = score; else DATA.grades.push({id:Date.now(),course,student,score});
+      renderGrades(); renderStats();
+    }
+    function renderGrades(){
+      const tbody = document.getElementById('gradeTable'); tbody.innerHTML='';
+      DATA.grades.forEach(g=> tbody.insertAdjacentHTML('beforeend',`<tr><td>${g.student}</td><td>${g.course}</td><td>${g.score}</td></tr>`));
+      // compute avg
+      const avg = DATA.grades.length ? Math.round(DATA.grades.reduce((s,g)=>s+g.score,0)/DATA.grades.length) : 0;
+      document.getElementById('statAvg').textContent = avg;
+    }
+
+    // Recent uploads
+    function renderRecentUploads(){
+      const el = document.getElementById('recentUploads'); el.innerHTML='';
+      DATA.lessons.slice().reverse().slice(0,6).forEach(l=> el.insertAdjacentHTML('beforeend',`<div style="padding:8px;border-bottom:1px solid #f1f3f8">${l.title} <div class="muted">${l.filename}</div></div>`));
+    }
+
+    // Analytics charts
+    function renderAnalytics(){
+      // sample data if empty
+      if(DATA.grades.length===0){
+        DATA.grades.push({id:1,course:'Sample',student:'A',score:78});
+        DATA.grades.push({id:2,course:'Sample',student:'B',score:62});
+        DATA.grades.push({id:3,course:'Sample',student:'C',score:88});
+      }
+      const avgProgress = Math.round(DATA.grades.reduce((s,g)=>s+g.score,0)/DATA.grades.length);
+      document.getElementById('avgProgress').textContent = avgProgress + '%';
+
+      // progress donut
+      const ctx = document.getElementById('progressChart').getContext('2d');
+      if(window.progressChart) window.progressChart.destroy();
+      window.progressChart = new Chart(ctx, {type:'doughnut', data:{labels:['Completed','Remaining'], datasets:[{data:[avgProgress,100-avgProgress]}]}, options:{cutout:'60%'}});
+
+      // score histogram
+      const ctx2 = document.getElementById('scoreChart').getContext('2d');
+      const scores = DATA.grades.map(g=>g.score);
+      const bins = [0,50,60,70,80,90,100];
+      const counts = bins.slice(0,-1).map((b,i)=> scores.filter(s=>s>=b && s<bins[i+1]).length);
+      if(window.scoreChart) window.scoreChart.destroy();
+      window.scoreChart = new Chart(ctx2,{type:'bar',data:{labels:['0-49','50-59','60-69','70-79','80-89','90-100'],datasets:[{data:counts}]}});
+
+      // comparative table
+      const comp = document.getElementById('comparativeTable'); comp.innerHTML='';
+      const groups = {};
+      DATA.grades.forEach(g=>{ groups[g.course] = groups[g.course] || {sum:0,count:0}; groups[g.course].sum+=g.score; groups[g.course].count++; });
+      Object.entries(groups).forEach(([course,vals])=> comp.insertAdjacentHTML('beforeend',`<tr><td>${course}</td><td>${Math.round(vals.sum/vals.count)}%</td><td>${Math.round(vals.sum/vals.count)}</td></tr>`));
+    }
+
+    // Stats
+    function renderStats(){
+      document.getElementById('statCourses').textContent = DATA.courses.length;
+      // simple student count from attendance and grades
+      const students = new Set(); DATA.attendance.forEach(a=>students.add(a.name)); DATA.grades.forEach(g=>students.add(g.student));
+      document.getElementById('statStudents').textContent = students.size;
+      document.getElementById('statAvg').textContent = DATA.grades.length ? Math.round(DATA.grades.reduce((s,g)=>s+g.score,0)/DATA.grades.length) : 0;
+    }
+
+    // Export / PDF functions (simple)
+    function exportAllPDF(){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(16); doc.text('Class Report',14,20);
+      doc.setFontSize(11); doc.text('Courses: ' + DATA.courses.length,14,30);
+      doc.text('Students: ' + (new Set(DATA.attendance.map(a=>a.name)).size || 0),14,36);
+      doc.save('class_report.pdf');
+    }
+    function downloadClassReport(){ exportAllPDF(); }
+    function downloadStudentReport(){ alert('This will generate a PDF for the selected student — integrate with backend to create detailed report.'); }
+    function downloadAttendanceGradesSummary(){ alert('This will create a combined summary PDF — placeholder function.'); }
+    function exportGradesExcel(){
+      /* Build a simple worksheet */
+      const ws_data = [['Student','Course','Score']].concat(DATA.grades.map(g=>[g.student,g.course,g.score]));
+      const wb = XLSX.utils.book_new(); const ws = XLSX.utils.aoa_to_sheet(ws_data); XLSX.utils.book_append_sheet(wb,ws,'Grades');
+      XLSX.writeFile(wb,'grades.xlsx');
+    }
+
+    // simple downloads used by top buttons
+    function exportGradesExcel(){
+      if(DATA.grades.length===0) return alert('No grades to export');
+      const ws_data = [['Student','Course','Score']].concat(DATA.grades.map(g=>[g.student,g.course,g.score]));
+      const wb = XLSX.utils.book_new(); const ws = XLSX.utils.aoa_to_sheet(ws_data); XLSX.utils.book_append_sheet(wb,ws,'Grades');
+      XLSX.writeFile(wb,'grades.xlsx');
+    }
+
+    // initial demo data
+    (function init(){
+      DATA.courses = [{id:1,name:'Embedded Systems 101'},{id:2,name:'Data Structures'}];
+      DATA.modules = { 'Embedded Systems 101': [{id:1,title:'Basics'}], 'Data Structures': [{id:2,title:'Arrays'}] };
+      DATA.lessons = [{id:1,course:'Embedded Systems 101',title:'Intro.pdf',filename:'intro.pdf',type:'PDF',uploadedAt:new Date()},{id:2,course:'Data Structures',title:'Arrays.mp4',filename:'arrays.mp4',type:'Video',uploadedAt:new Date()}];
+      DATA.liveClasses = [{id:1,course:'Revision — Embedded',datetime:'2025-09-20 10:00',link:''}];
+      DATA.grades = [{id:1,course:'Embedded Systems 101',student:'Amit',score:85},{id:2,course:'Embedded Systems 101',student:'Ravi',score:72},{id:3,course:'Data Structures',student:'Sunita',score:91}];
+      DATA.attendance = [{id:1,course:'Embedded Systems 101',name:'Amit',date:'2025-09-10',status:'Present'}];
+      loadCourses(); renderModules(); renderRecentUploads(); renderUpcoming(); renderAttendanceSheet(); renderGrades(); renderAnalytics(); renderStats();
+    })();
+
+  </script>
+
+  
+  
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Test Portal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+    .box {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    .question {
+      margin: 15px 0;
+    }
+    .hidden {
+      display: none;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #result {
+      font-weight: bold;
+      color: #222;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📚 Student Test Portal</h1>
+
+  <!-- Step 1: Subject Selection -->
+  <div class="box" id="subject-box">
+    <h2>Select Subject</h2>
+    <select id="subject">
+      <option value="">-- Choose Subject --</option>
+      <option value="math">Mathematics</option>
+      <option value="science">Science</option>
+    </select>
+    <button onclick="showLessons()">Next</button>
+  </div>
+
+  <!-- Step 2: Lesson Selection -->
+  <div class="box hidden" id="lesson-box">
+    <h2>Select Lesson</h2>
+    <select id="lesson">
+      <option value="">-- Choose Lesson --</option>
+    </select>
+    <button onclick="startTest()">Start Test</button>
+  </div>
+
+  <!-- Step 3: Test Questions -->
+  <div class="box hidden" id="test-box">
+    <h2>Test</h2>
+    <form id="test-form"></form>
+    <button onclick="submitTest()">Submit Test</button>
+  </div>
+
+  <!-- Step 4: Result -->
+  <div class="box hidden" id="result-box">
+    <h2>Result</h2>
+    <p id="result"></p>
+    <button onclick="location.reload()">Take Another Test</button>
+  </div>
+
+  <script>
+    const lessons = {
+      math: ["Algebra", "Geometry"],
+      science: ["Physics", "Biology"]
+    };
+
+    const questions = {
+      Algebra: [
+        { q: "2 + 2 = ?", options: ["3", "4", "5"], answer: "4" },
+        { q: "5 × 3 = ?", options: ["15", "20", "10"], answer: "15" }
+      ],
+      Geometry: [
+        { q: "A triangle has how many sides?", options: ["3", "4", "5"], answer: "3" },
+        { q: "A square has how many corners?", options: ["3", "4", "5"], answer: "4" }
+      ],
+      Physics: [
+        { q: "Speed = ?", options: ["Distance/Time", "Mass/Volume", "Force/Area"], answer: "Distance/Time" },
+        { q: "Unit of Force?", options: ["Newton", "Joule", "Pascal"], answer: "Newton" }
+      ],
+      Biology: [
+        { q: "Human heart has how many chambers?", options: ["2", "3", "4"], answer: "4" },
+        { q: "Plants make food by?", options: ["Respiration", "Photosynthesis", "Digestion"], answer: "Photosynthesis" }
+      ]
+    };
+
+    function showLessons() {
+      const subject = document.getElementById("subject").value;
+      if (!subject) {
+        alert("Please select a subject!");
+        return;
+      }
+
+      const lessonDropdown = document.getElementById("lesson");
+      lessonDropdown.innerHTML = "<option value=''>-- Choose Lesson --</option>";
+      lessons[subject].forEach(lesson => {
+        let opt = document.createElement("option");
+        opt.value = lesson;
+        opt.innerText = lesson;
+        lessonDropdown.appendChild(opt);
+      });
+
+      document.getElementById("subject-box").classList.add("hidden");
+      document.getElementById("lesson-box").classList.remove("hidden");
+    }
+
+    function startTest() {
+      const lesson = document.getElementById("lesson").value;
+      if (!lesson) {
+        alert("Please select a lesson!");
+        return;
+      }
+
+      const form = document.getElementById("test-form");
+      form.innerHTML = "";
+      questions[lesson].forEach((q, index) => {
+        let div = document.createElement("div");
+        div.classList.add("question");
+        div.innerHTML = `<p>${index + 1}. ${q.q}</p>`;
+        q.options.forEach(opt => {
+          div.innerHTML += `
+            <label>
+              <input type="radio" name="q${index}" value="${opt}"> ${opt}
+            </label><br>`;
+        });
+        form.appendChild(div);
+      });
+
+      document.getElementById("lesson-box").classList.add("hidden");
+      document.getElementById("test-box").classList.remove("hidden");
+    }
+
+    function submitTest() {
+      let score = 0;
+      const lesson = document.getElementById("lesson").value;
+      const form = document.getElementById("test-form");
+
+      questions[lesson].forEach((q, index) => {
+        let ans = form[`q${index}`].value;
+        if (ans === q.answer) score++;
+      });
+
+      document.getElementById("test-box").classList.add("hidden");
+      document.getElementById("result-box").classList.remove("hidden");
+      document.getElementById("result").innerText = 
+        `You scored ${score} out of ${questions[lesson].length}`;
+    }
+  </script>
+
+</body>
+</html>

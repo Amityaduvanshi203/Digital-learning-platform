@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parent Dashboard — Digital Learning Platform</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root{--bg:#f6f8fb;--card:#ffffff;--muted:#6b7280;--accent:#2563eb}
+    *{box-sizing:border-box}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; background:var(--bg); color:#111}
+    .container{max-width:1200px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .grid{display:grid;gap:16px}
+    .grid-3{grid-template-columns: 1fr 360px;}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 1px 6px rgba(16,24,40,0.06)}
+    .card h3{margin:0 0 12px 0;font-size:16px}
+    .row{display:flex;gap:12px;align-items:center}
+    .progress{height:12px;background:#eef2ff;border-radius:12px;overflow:hidden}
+    .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#4f46e5);}
+    table{width:100%;border-collapse:collapse}
+    table th, table td{padding:8px;text-align:left;font-size:13px;border-bottom:1px solid #f1f5f9}
+    .small{font-size:13px;color:var(--muted)}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f3f4f6;font-weight:600;font-size:12px}
+    button{background:var(--accent);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .muted-btn{background:#eef2ff;color:var(--accent)}
+    .subject-list{display:flex;flex-direction:column;gap:8px}
+    .subject{display:flex;justify-content:space-between;align-items:center}
+    .assignments li{margin-bottom:8px}
+    .chat-box{height:220px;overflow:auto;border:1px solid #eef2ff;padding:10px;border-radius:8px}
+    .flex-col{display:flex;flex-direction:column}
+    @media (max-width:900px){.grid-3{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Parent Dashboard</h1>
+        <div class="small">Student: <strong id="student-name">Aarav Kumar</strong> • Class: <strong id="student-class">6A</strong></div>
+      </div>
+      <div class="row">
+        <button onclick="downloadCSV()">Download Excel (CSV)</button>
+        <button class="muted-btn" onclick="window.print()">Download PDF / Print</button>
+      </div>
+    </header>
+
+    <div class="grid grid-3">
+      <!-- Left / Main Column -->
+      <div class="grid" style="grid-template-columns:1fr;">
+
+        <!-- Child Progress Card -->
+        <section class="card">
+          <h3>Child Progress</h3>
+          <div class="row" style="justify-content:space-between;align-items:flex-start">
+            <div style="flex:1;margin-right:18px">
+              <canvas id="overallChart" style="max-height:220px"></canvas>
+            </div>
+            <div style="width:260px">
+              <div class="small">Overall Performance</div>
+              <div class="pill" id="overall-grade">B+ • 78%</div>
+
+              <div style="margin-top:12px" class="small">Subject-wise Progress</div>
+              <div class="subject-list" id="subject-list">
+                <!-- JS fills this -->
+              </div>
+
+              <div style="margin-top:12px" class="small">Time Spent on Learning</div>
+              <div class="small">This week: <strong id="time-week">4h 20m</strong></div>
+              <div class="small">This month: <strong id="time-month">15h 10m</strong></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Lessons Completed -->
+        <section class="card">
+          <h3>Lessons Completed</h3>
+          <div class="small" style="margin-bottom:8px">Status: <em>Completed / In-progress / Pending</em></div>
+          <table>
+            <thead>
+              <tr><th>Lesson</th><th>Status</th><th>Quiz Score</th><th>Last Access</th></tr>
+            </thead>
+            <tbody id="lessons-table">
+              <!-- JS fills rows -->
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Upcoming Assignments / Notifications -->
+        <section class="card">
+          <h3>Upcoming Assignments / Notifications</h3>
+          <ul class="assignments" id="assignments-list">
+            <!-- JS fills -->
+          </ul>
+
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <button onclick="addToGoogleCalendarSample()">Sync a Deadline to Google Calendar</button>
+            <button class="muted-btn" onclick="downloadICSSample()">Export .ics (Add to Calendar)</button>
+          </div>
+
+        </section>
+
+      </div>
+
+      <!-- Right Column -->
+      <aside>
+        <div class="card" style="margin-bottom:16px">
+          <h3>Engagement Tools</h3>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button onclick="downloadCSV()">Download Report (Excel)</button>
+            <button class="muted-btn" onclick="window.print()">Download Report (PDF)</button>
+            <button onclick="alertLowPerformance()">Set Alert: Low Performance</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+          <h3>Parent–Teacher Communication</h3>
+          <div class="chat-box" id="chat-box">
+            <div class="small">Teacher (Ms. Sharma): Aarav did well on the math quiz, needs to practice multiplication tables.</div>
+            <div style="height:8px"></div>
+            <div class="small">You: Thanks, I'll help him practice daily.</div>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <input id="msg-input" placeholder="Write a message to teacher" style="flex:1;padding:8px;border-radius:8px;border:1px solid #eef2ff" />
+            <button onclick="sendMsg()">Send</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Quick Summary</h3>
+          <div class="small">Overall: <strong id="summary-overall">78% • B+</strong></div>
+          <div class="small">Pending Assignments: <strong id="summary-pending">2</strong></div>
+          <div class="small">Average Quiz Score: <strong id="summary-avg">72%</strong></div>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+
+<script>
+  // Sample data — replace with real data from your backend
+  const student = {name:'Aarav Kumar',class:'6A'};
+  document.getElementById('student-name').innerText = student.name;
+  document.getElementById('student-class').innerText = student.class;
+
+  const subjects = [
+    {name:'Mathematics', progress:88},
+    {name:'Science', progress:72},
+    {name:'English', progress:65},
+    {name:'Hindi', progress:80},
+    {name:'Social Studies', progress:70}
+  ];
+
+  const lessons = [
+    {title:'Fractions - Part 1', status:'Completed', score:'84%', last:'2025-09-12'},
+    {title:'Plant Cells', status:'In-progress', score:'-', last:'2025-09-14'},
+    {title:'Grammar: Tenses', status:'Pending', score:'-', last:'-'},
+  ];
+
+  const assignments = [
+    {title:'Math worksheet: Fractions', due:'2025-09-20', type:'Homework'},
+    {title:'Science project: Plant lifecycle', due:'2025-09-25', type:'Project'}
+  ];
+
+  // Render subject list
+  const subjectList = document.getElementById('subject-list');
+  subjects.forEach(s=>{
+    const div = document.createElement('div'); div.className='subject';
+    div.innerHTML = `<div>${s.name}</div><div style='width:140px'><div class='progress'><i style='width:${s.progress}%'></i></div><div class='small' style='text-align:right'>${s.progress}%</div></div>`;
+    subjectList.appendChild(div);
+  });
+
+  // Render lessons table
+  const lessonsTable = document.getElementById('lessons-table');
+  lessons.forEach(l=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${l.title}</td><td>${l.status}</td><td>${l.score}</td><td>${l.last}</td>`;
+    lessonsTable.appendChild(tr);
+  });
+
+  // Render assignments
+  const assignList = document.getElementById('assignments-list');
+  assignments.forEach(a=>{
+    const li = document.createElement('li');
+    li.innerHTML = `<strong>${a.title}</strong> — <span class='small'>Due: ${a.due}</span> <div class='small'>${a.type}</div>`;
+    assignList.appendChild(li);
+  });
+
+  // Summary
+  document.getElementById('summary-overall').innerText = '78% • B+';
+  document.getElementById('summary-pending').innerText = assignments.length;
+  document.getElementById('summary-avg').innerText = '72%';
+
+  // Chart — overall performance trend
+  const ctx = document.getElementById('overallChart').getContext('2d');
+  const overallChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Week 1','Week 2','Week 3','Week 4'],
+      datasets: [{
+        label: 'Performance %',
+        data: [65,72,75,78],
+        tension: 0.4,
+        fill: true,
+        backgroundColor: 'rgba(37,99,235,0.08)',
+        borderColor: 'rgb(37,99,235)'
+      }]
+    },
+    options: {responsive:true, plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true,max:100}}
+    }
+  });
+
+  // Send message mock
+  function sendMsg(){
+    const inp = document.getElementById('msg-input');
+    if(!inp.value) return; const box = document.getElementById('chat-box');
+    const d = document.createElement('div'); d.className='small'; d.innerText = 'You: ' + inp.value; box.appendChild(d); inp.value=''; box.scrollTop = box.scrollHeight;
+  }
+
+  // Download CSV (Excel) — simple demonstration
+  function downloadCSV(){
+    const headers = ['Lesson','Status','Quiz Score','Last Access'];
+    const rows = lessons.map(l=>[l.title,l.status,l.score,l.last]);
+    let csv = headers.join(',') + '\n' + rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv'});
+    const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download = `${student.name.replace(/\s+/g,'_')}_report.csv`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
+
+  // Alert for low performance
+  function alertLowPerformance(){
+    const threshold = 60; const low = subjects.filter(s=>s.progress < threshold);
+    if(low.length===0) alert('No subjects below ' + threshold + '%');
+    else alert('Alert set. Subjects below ' + threshold + '%: ' + low.map(s=>s.name).join(', '));
+  }
+
+  // Simple ICS generator for first assignment (sample)
+  function downloadICSSample(){
+    if(!assignments.length) return alert('No assignments');
+    const a = assignments[0];
+    const dtStart = a.due.replace(/-/g,'') + 'T090000';
+    const dtEnd = a.due.replace(/-/g,'') + 'T100000';
+    const ics = `BEGIN:VCALENDAR\nVERSION:2.0\nBEGIN:VEVENT\nUID:${Date.now()}@example.com\nDTSTAMP:${formatDateICS(new Date())}\nDTSTART:${dtStart}\nDTEND:${dtEnd}\nSUMMARY:${a.title}\nDESCRIPTION:${a.type}\nEND:VEVENT\nEND:VCALENDAR`;
+    const blob = new Blob([ics], {type:'text/calendar'}); const url = URL.createObjectURL(blob);
+    const link = document.createElement('a'); link.href = url; link.download = `${a.title.replace(/\s+/g,'_')}.ics`; document.body.appendChild(link); link.click(); link.remove(); URL.revokeObjectURL(url);
+  }
+  function formatDateICS(d){
+    return d.toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+  }
+
+  // Open Google Calendar with pre-filled event (sample for first assignment)
+  function addToGoogleCalendarSample(){
+    if(!assignments.length) return alert('No assignments');
+    const a = assignments[0];
+    const start = a.due + 'T09:00:00';
+    const end = a.due + 'T10:00:00';
+    const details = encodeURIComponent(a.type + ' — from Digital Learning Platform');
+    const url = `https://calendar.google.com/calendar/r/eventedit?text=${encodeURIComponent(a.title)}&dates=${a.due.replace(/-/g,'')+'T090000Z'}/${a.due.replace(/-/g,'')+'T100000Z'}&details=${details}`;
+    window.open(url,'_blank');
+  }
+
+</script>
+</body>
+</html>

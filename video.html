@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Lessons</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f4f6f9;}
+header{background:#4c27f4;color:white;padding:15px;text-align:center;font-size:22px;font-weight:bold;position:relative;}
+.language-buttons{position:absolute;right:10px;top:50%;transform:translateY(-50%);}
+.language-buttons button{background:white;color:#4c27f4;border:none;margin-left:5px;padding:6px 12px;border-radius:6px;font-size:14px;cursor:pointer;font-weight:bold;}
+.language-buttons button:hover{background:#e1d9ff;}
+.container{padding:20px;}
+.search-box{margin-bottom:20px;}
+.search-box input{width:100%;padding:10px;border:1px solid #ccc;border-radius:6px;}
+.upcoming-section{margin:20px 0;}
+.upcoming-section h3{margin-bottom:10px;color:#0d47a1;}
+.upcoming-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;}
+.upcoming-card{background:#e3f2fd;border:1px solid #90caf9;border-radius:10px;padding:12px;box-shadow:0px 2px 6px rgba(0,0,0,0.1);}
+.upcoming-card h4{margin:0 0 6px 0;font-size:16px;}
+.upcoming-date{font-size:13px;color:#555;}
+.subjects{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.subject{background:#fff;border-radius:10px;padding:10px;box-shadow:0px 2px 6px rgba(0,0,0,0.1);}
+.subject h3{background:#eee;padding:10px;border-radius:6px;margin-top:0;}
+.lesson{display:flex;justify-content:space-between;align-items:center;padding:8px;margin-bottom:6px;background:#fafafa;border-radius:6px;box-shadow:0px 1px 4px rgba(0,0,0,0.1);}
+.lesson-buttons button,.lesson-buttons a{margin-left:5px;padding:5px 10px;font-size:13px;border-radius:4px;border:none;cursor:pointer;text-decoration:none;color:white;}
+.view-btn{background:#4caf50;}
+.download-btn{background:#ff5722;}
+.video-player{width:100%;margin-bottom:20px;}
+.video-player video{width:100%;border-radius:8px;}
+.page{display:none;}
+.page.active{display:block;}
+</style>
+</head>
+<body>
+
+<header>
+🎥 Video Lessons
+<div class="language-buttons">
+<button onclick="showLanguage('english')">English</button>
+<button onclick="showLanguage('hindi')">हिन्दी</button>
+<button onclick="showLanguage('punjabi')">ਪੰਜਾਬੀ</button>
+</div>
+</header>
+
+<div class="container">
+
+<div class="search-box">
+<input type="text" placeholder="Search Subject or Lesson...">
+</div>
+
+<div class="video-players" style="display: flex; gap: 10px;">
+  <div class="video-player" style="flex: 1;">
+    <video controls>
+      <source src="videos/default1.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="video-player" style="flex: 1;">
+    <video controls>
+      <source src="videos/default2.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="video-player" style="flex: 1;">
+    <video controls>
+      <source src="videos/default3.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<!-- ================= ENGLISH PAGE ================= -->
+<div id="english" class="page active">
+<div class="upcoming-section">
+<h3>🔮 Upcoming Lessons</h3>
+<div class="upcoming-list">
+<div class="upcoming-card"><h4>Math – Algebra Basics</h4><span class="upcoming-date">25 Sept 2025</span></div>
+<div class="upcoming-card"><h4>Social Science – World History</h4><span class="upcoming-date">28 Sept 2025</span></div>
+<div class="upcoming-card"><h4>English – Vocabulary</h4><span class="upcoming-date">2 Oct 2025</span></div>
+<div class="upcoming-card"><h4>Hindi – Grammar Basics</h4><span class="upcoming-date">5 Oct 2025</span></div>
+</div>
+</div>
+
+<div class="subjects">
+<!-- Math -->
+<div class="subject">
+<h3>Math</h3>
+<div class="lesson"><span>Algebra Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/math1.mp4">View</button><a href="videos/english/math1.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Geometry Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/math2.mp4">View</button><a href="videos/english/math2.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Trigonometry</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/math3.mp4">View</button><a href="videos/english/math3.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Probability</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/math4.mp4">View</button><a href="videos/english/math4.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Statistics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/math5.mp4">View</button><a href="videos/english/math5.mp4" download class="download-btn">Download</a></div></div>
+</div>
+
+<!-- Social Science -->
+<div class="subject">
+<h3>Social Science</h3>
+<div class="lesson"><span>World History</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/social1.mp4">View</button><a href="videos/english/social1.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Geography Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/social2.mp4">View</button><a href="videos/english/social2.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Political Science</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/social3.mp4">View</button><a href="videos/english/social3.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Civics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/social4.mp4">View</button><a href="videos/english/social4.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Economics Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/social5.mp4">View</button><a href="videos/english/social5.mp4" download class="download-btn">Download</a></div></div>
+</div>
+
+<!-- Hindi -->
+<div class="subject">
+<h3>Hindi</h3>
+<div class="lesson"><span>Grammar Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/hindi1.mp4">View</button><a href="videos/english/hindi1.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Poetry</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/hindi2.mp4">View</button><a href="videos/english/hindi2.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Prose</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/hindi3.mp4">View</button><a href="videos/english/hindi3.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Grammar Advanced</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/hindi4.mp4">View</button><a href="videos/english/hindi4.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Reading Comprehension</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/hindi5.mp4">View</button><a href="videos/english/hindi5.mp4" download class="download-btn">Download</a></div></div>
+</div>
+
+<!-- English -->
+<div class="subject">
+<h3>English</h3>
+<div class="lesson"><span>Grammar Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/english1.mp4">View</button><a href="videos/english/english1.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Vocabulary</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/english2.mp4">View</button><a href="videos/english/english2.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Writing Skills</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/english3.mp4">View</button><a href="videos/english/english3.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Reading Comprehension</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/english4.mp4">View</button><a href="videos/english/english4.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Poetry Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/english5.mp4">View</button><a href="videos/english/english5.mp4" download class="download-btn">Download</a></div></div>
+</div>
+<!-- Physics -->
+<div class="subject">
+<h3>Physics</h3>
+<div class="lesson"><span>Mechanics Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/physics1.mp4">View</button><a href="videos/english/physics1.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Optics Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/physics2.mp4">View</button><a href="videos/english/physics2.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Thermodynamics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/physics3.mp4">View</button><a href="videos/english/physics3.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Electricity</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/physics4.mp4">View</button><a href="videos/english/physics4.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Magnetism</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/physics5.mp4">View</button><a href="videos/english/physics5.mp4" download class="download-btn">Download</a></div></div>
+</div>
+
+<!-- Punjabi Language -->
+<div class="subject">
+<h3>Punjabi</h3>
+<div class="lesson"><span>Grammar Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/punjabi1.mp4">View</button><a href="videos/english/punjabi1.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Vocabulary</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/punjabi2.mp4">View</button><a href="videos/english/punjabi2.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Writing Skills</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/punjabi3.mp4">View</button><a href="videos/english/punjabi3.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Reading Comprehension</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/punjabi4.mp4">View</button><a href="videos/english/punjabi4.mp4" download class="download-btn">Download</a></div></div>
+<div class="lesson"><span>Poetry Basics</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/english/punjabi5.mp4">View</button><a href="videos/english/punjabi5.mp4" download class="download-btn">Download</a></div></div>
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= HINDI PAGE ================= -->
+<div id="hindi" class="page">
+<div class="upcoming-section">
+<h3>🔮 आने वाले पाठ</h3>
+<div class="upcoming-list">
+<div class="upcoming-card"><h4>गणित – बीजगणित बुनियादी</h4><span class="upcoming-date">25 सितम्बर 2025</span></div>
+<div class="upcoming-card"><h4>सामाजिक विज्ञान – विश्व इतिहास</h4><span class="upcoming-date">28 सितम्बर 2025</span></div>
+<div class="upcoming-card"><h4>अंग्रेजी – शब्दावली</h4><span class="upcoming-date">2 अक्टूबर 2025</span></div>
+<div class="upcoming-card"><h4>हिंदी – व्याकरण बुनियादी</h4><span class="upcoming-date">5 अक्टूबर 2025</span></div>
+</div>
+</div>
+
+<div class="subjects">
+<!-- Hindi Math -->
+<div class="subject">
+<h3>गणित</h3>
+<div class="lesson"><span>बीजगणित बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/math1.mp4">देखें</button><a href="videos/hindi/math1.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>ज्यामिति बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/math2.mp4">देखें</button><a href="videos/hindi/math2.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>त्रिकोणमिति</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/math3.mp4">देखें</button><a href="videos/hindi/math3.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>सांख्यिकीय संभावना</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/math4.mp4">देखें</button><a href="videos/hindi/math4.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>सांख्यिकी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/math5.mp4">देखें</button><a href="videos/hindi/math5.mp4" download class="download-btn">डाउनलोड</a></div></div>
+</div>
+
+<!-- Hindi Social Science -->
+<div class="subject">
+<h3>सामाजिक विज्ञान</h3>
+<div class="lesson"><span>विश्व इतिहास</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/social1.mp4">देखें</button><a href="videos/hindi/social1.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>भूगोल बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/social2.mp4">देखें</button><a href="videos/hindi/social2.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>राजनीतिक विज्ञान</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/social3.mp4">देखें</button><a href="videos/hindi/social3.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>नागरिकशास्त्र</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/social4.mp4">देखें</button><a href="videos/hindi/social4.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>अर्थशास्त्र बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/social5.mp4">देखें</button><a href="videos/hindi/social5.mp4" download class="download-btn">डाउनलोड</a></div></div>
+</div>
+
+<!-- Hindi Language Subjects -->
+<div class="subject">
+<h3>हिंदी</h3>
+<div class="lesson"><span>व्याकरण बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/hindi1.mp4">देखें</button><a href="videos/hindi/hindi1.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>कविता</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/hindi2.mp4">देखें</button><a href="videos/hindi/hindi2.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>गद्य</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/hindi3.mp4">देखें</button><a href="videos/hindi/hindi3.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>व्याकरण उन्नत</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/hindi4.mp4">देखें</button><a href="videos/hindi/hindi4.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>पाठ समझ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/hindi5.mp4">देखें</button><a href="videos/hindi/hindi5.mp4" download class="download-btn">डाउनलोड</a></div></div>
+</div>
+
+<!-- Hindi English -->
+<div class="subject">
+<h3>अंग्रेज़ी</h3>
+<div class="lesson"><span>व्याकरण बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/english1.mp4">देखें</button><a href="videos/hindi/english1.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>शब्दावली</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/english2.mp4">देखें</button><a href="videos/hindi/english2.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>लेखन कौशल</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/english3.mp4">देखें</button><a href="videos/hindi/english3.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>पाठ समझ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/english4.mp4">देखें</button><a href="videos/hindi/english4.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>कविता बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/english5.mp4">देखें</button><a href="videos/hindi/english5.mp4" download class="download-btn">डाउनलोड</a></div></div>
+</div>
+<!-- Physics -->
+<div class="subject">
+<h3>भौतिक विज्ञान</h3>
+<div class="lesson"><span>यांत्रिकी बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/physics1.mp4">देखें</button><a href="videos/hindi/physics1.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>प्रकाशिकी बुनियादी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/physics2.mp4">देखें</button><a href="videos/hindi/physics2.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>तापगतिकी</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/physics3.mp4">देखें</button><a href="videos/hindi/physics3.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>विद्युत</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/physics4.mp4">देखें</button><a href="videos/hindi/physics4.mp4" download class="download-btn">डाउनलोड</a></div></div>
+<div class="lesson"><span>चुंबकत्व</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/physics5.mp4">देखें</button><a href="videos/hindi/physics5.mp4" download class="download-btn">डाउनलोड</a></div></div>
+</div>
+
+<!-- Punjabi Language -->
+<div class="subject">
+<h3>ਪੰਜਾਬੀ</h3>
+<div class="lesson"><span>ਵਿਆਕਰਣ ਬੁਨਿਆਦੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/punjabi1.mp4">ਦੇਖੋ</button><a href="videos/hindi/punjabi1.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਸ਼ਬਦਾਵਲੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/punjabi2.mp4">ਦੇਖੋ</button><a href="videos/hindi/punjabi2.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਲਿਖਣ ਕੌਸ਼ਲ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/punjabi3.mp4">ਦੇਖੋ</button><a href="videos/hindi/punjabi3.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਪਾਠ ਸਮਝ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/punjabi4.mp4">ਦੇਖੋ</button><a href="videos/hindi/punjabi4.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਕਵਿਤਾ ਬੁਨਿਆਦੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/hindi/punjabi5.mp4">ਦੇਖੋ</button><a href="videos/hindi/punjabi5.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+</div>
+
+
+</div>
+</div>
+
+<!-- ================= PUNJABI PAGE ================= -->
+<div id="punjabi" class="page">
+<div class="upcoming-section">
+<h3>🔮 ਆਉਣ ਵਾਲੇ ਪਾਠ</h3>
+<div class="upcoming-list">
+<div class="upcoming-card"><h4>ਗਣਿਤ – ਬੇਸਿਕ ਬੀਜਗਣਿਤ</h4><span class="upcoming-date">25 ਸਤੰਬਰ 2025</span></div>
+<div class="upcoming-card"><h4>ਸਮਾਜਿਕ ਵਿਗਿਆਨ – ਵਿਸ਼ਵ ਇਤਿਹਾਸ</h4><span class="upcoming-date">28 ਸਤੰਬਰ 2025</span></div>
+<div class="upcoming-card"><h4>ਅੰਗਰੇਜ਼ੀ – ਸ਼ਬਦਾਵਲੀ</h4><span class="upcoming-date">2 ਅਕਤੂਬਰ 2025</span></div>
+<div class="upcoming-card"><h4>ਹਿੰਦੀ – ਵਿਅਾਕਰਣ ਬੇਸਿਕ</h4><span class="upcoming-date">5 ਅਕਤੂਬਰ 2025</span></div>
+</div>
+</div>
+
+<div class="subjects">
+<!-- Punjabi Math -->
+<div class="subject">
+<h3>ਗਣਿਤ</h3>
+<div class="lesson"><span>ਬੇਸਿਕ ਬੀਜਗਣਿਤ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/math1.mp4">ਦੇਖੋ</button><a href="videos/punjabi/math1.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਜਿਓਮੈਟਰੀ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/math2.mp4">ਦੇਖੋ</button><a href="videos/punjabi/math2.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਤ੍ਰਿਕੋਣਮਿਤੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/math3.mp4">ਦੇਖੋ</button><a href="videos/punjabi/math3.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਸੰਭਾਵਨਾ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/math4.mp4">ਦੇਖੋ</button><a href="videos/punjabi/math4.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਸਾਂਖਿਆਕੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/math5.mp4">ਦੇਖੋ</button><a href="videos/punjabi/math5.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+</div>
+
+<!-- Punjabi Social Science -->
+<div class="subject">
+<h3>ਸਮਾਜਿਕ ਵਿਗਿਆਨ</h3>
+<div class="lesson"><span>ਵਿਸ਼ਵ ਇਤਿਹਾਸ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/social1.mp4">ਦੇਖੋ</button><a href="videos/punjabi/social1.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਭੂਗੋਲ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/social2.mp4">ਦੇਖੋ</button><a href="videos/punjabi/social2.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਰਾਜਨੀਤਿਕ ਵਿਗਿਆਨ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/social3.mp4">ਦੇਖੋ</button><a href="videos/punjabi/social3.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਨਾਗਰਿਕ ਵਿਗਿਆਨ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/social4.mp4">ਦੇਖੋ</button><a href="videos/punjabi/social4.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਅਰਥ ਸ਼ਾਸਤ੍ਰ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/social5.mp4">ਦੇਖੋ</button><a href="videos/punjabi/social5.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+</div>
+
+<!-- Punjabi Hindi -->
+<div class="subject">
+<h3>ਹਿੰਦੀ</h3>
+<div class="lesson"><span>ਵਿਆਕਰਣ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/hindi1.mp4">ਦੇਖੋ</button><a href="videos/punjabi/hindi1.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਕਵਿਤਾ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/hindi2.mp4">ਦੇਖੋ</button><a href="videos/punjabi/hindi2.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਗਦ੍ਯ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/hindi3.mp4">ਦੇਖੋ</button><a href="videos/punjabi/hindi3.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਵਿਆਕਰਣ ਐਡਵਾਂਸਡ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/hindi4.mp4">ਦੇਖੋ</button><a href="videos/punjabi/hindi4.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਪਾਠ ਸਮਝ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/hindi5.mp4">ਦੇਖੋ</button><a href="videos/punjabi/hindi5.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+</div>
+
+<!-- Punjabi English -->
+<div class="subject">
+<h3>ਅੰਗਰੇਜ਼ੀ</h3>
+<div class="lesson"><span>ਵਿਆਕਰਣ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/english1.mp4">ਦੇਖੋ</button><a href="videos/punjabi/english1.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਸ਼ਬਦਾਵਲੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/english2.mp4">ਦੇਖੋ</button><a href="videos/punjabi/english2.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਲਿਖਣ ਕੌਸ਼ਲ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/english3.mp4">ਦੇਖੋ</button><a href="videos/punjabi/english3.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਪਾਠ ਸਮਝ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/english4.mp4">ਦੇਖੋ</button><a href="videos/punjabi/english4.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਕਵਿਤਾ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/english5.mp4">ਦੇਖੋ</button><a href="videos/punjabi/english5.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+</div>
+<!-- Physics -->
+<div class="subject">
+<h3>ਭੌਤਿਕ ਵਿਗਿਆਨ</h3>
+<div class="lesson"><span>ਯਾਂਤ੍ਰਿਕੀ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/physics1.mp4">ਦੇਖੋ</button><a href="videos/punjabi/physics1.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਆਪਟਿਕਸ ਬੇਸਿਕ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/physics2.mp4">ਦੇਖੋ</button><a href="videos/punjabi/physics2.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਥਰਮੋਡਾਇਨੇਮਿਕਸ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/physics3.mp4">ਦੇਖੋ</button><a href="videos/punjabi/physics3.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਬਿਜਲੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/physics4.mp4">ਦੇਖੋ</button><a href="videos/punjabi/physics4.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਚੁੰਬਕਤਾ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/physics5.mp4">ਦੇਖੋ</button><a href="videos/punjabi/physics5.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+</div>
+
+<!-- Punjabi Language -->
+<div class="subject">
+<h3>ਪੰਜਾਬੀ</h3>
+<div class="lesson"><span>ਵਿਆਕਰਣ ਬੁਨਿਆਦੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/punjabi1.mp4">ਦੇਖੋ</button><a href="videos/punjabi/punjabi1.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਸ਼ਬਦਾਵਲੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/punjabi2.mp4">ਦੇਖੋ</button><a href="videos/punjabi/punjabi2.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਲਿਖਣ ਕੌਸ਼ਲ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/punjabi3.mp4">ਦੇਖੋ</button><a href="videos/punjabi/punjabi3.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਪਾਠ ਸਮਝ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/punjabi4.mp4">ਦੇਖੋ</button><a href="videos/punjabi/punjabi4.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+<div class="lesson"><span>ਕਵਿਤਾ ਬੁਨਿਆਦੀ</span><div class="lesson-buttons"><button class="view-btn" data-video="videos/punjabi/punjabi5.mp4">ਦੇਖੋ</button><a href="videos/punjabi/punjabi5.mp4" download class="download-btn">ਡਾਊਨਲੋਡ</a></div></div>
+</div>
+
+</div>
+</div>
+
+<script>
+function showLanguage(lang){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(lang).classList.add('active');
+}
+
+const viewButtons=document.querySelectorAll('.view-btn');
+const mainVideo=document.getElementById('mainVideo');
+
+viewButtons.forEach(btn=>{
+btn.addEventListener('click',()=>{
+mainVideo.src=btn.getAttribute('data-video');
+mainVideo.play();
+});
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #f8f9fc; }
+    header { background: #4a90e2; color: white; padding: 15px 20px; text-align: center; font-size: 1.5em; font-weight: bold; }
+    nav { display: flex; justify-content: space-around; background: #2c3e50; padding: 10px; }
+    nav a { color: white; text-decoration: none; font-size: 1em; font-weight: bold; }
+    nav a:hover { text-decoration: underline; }
+    .container { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; padding: 20px; }
+    .card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .badge { display: inline-block; background: #f39c12; color: white; padding: 6px 12px; border-radius: 20px; margin: 5px; font-size: 0.9em; }
+    .progress-bar { background:#e0e0e0; border-radius:20px; height:20px; overflow:hidden; margin-top:10px; }
+    .progress-fill { background:#27ae60; height:100%; width:0%; text-align:center; color:#fff; font-size:12px; line-height:20px; transition:0.4s; }
+    button { background:#4a90e2; color:white; border:none; padding:10px 15px; border-radius:6px; cursor:pointer; margin-top:10px; }
+    button:hover { background:#357ab8; }
+    canvas { max-width: 100%; margin-top: 15px; }
+  </style>
+</head>
+<body>
+
+<header>🎓 Student Dashboard</header>
+
+<nav>
+  <a href="#progress">Progress Tracker</a>
+  <a href="#achievements">Achievements</a>
+  <a href="#notifications">Notifications</a>
+</nav>
+
+<div class="container">
+  <!-- Left: Progress Tracker -->
+  <div class="card">
+    <h2>📈 Progress Tracker</h2>
+    <canvas id="dailyProgress" height="100"></canvas>
+    <canvas id="subjectProgress" height="100"></canvas>
+    <div class="progress-bar">
+      <div id="progressFill" class="progress-fill">0%</div>
+    </div>
+    <button onclick="increaseProgress(20)">+20%</button>
+    <button onclick="resetProgress()">Reset</button>
+  </div>
+
+  <!-- Right: Achievements + Notifications + Progress Summary -->
+  <div>
+    <!-- Achievements -->
+    <div class="card">
+      <h2>🏅 Achievements</h2>
+      <div class="badge">Math Wizard 🧮</div>
+      <div class="badge">Science Explorer 🔬</div>
+      <div class="badge">7-Day Streak 🔥</div>
+      <p>Certificates: <a href="#">Download</a></p>
+    </div>
+
+    <!-- Notifications -->
+    <div class="card">
+      <h2>🔔 Notifications</h2>
+      <ul>
+        <li>📌 New lesson available: Geometry Basics</li>
+        <li>⏰ Quiz deadline: Science Chapter 1 - Tomorrow</li>
+        <li>📢 Announcement: Live class at 5 PM</li>
+      </ul>
+    </div>
+
+    <!-- Progress Summary -->
+    <div class="card">
+      <h2>Progress Summary</h2>
+      <p id="summaryText">Current Progress: 0%</p>
+      <canvas id="studentChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Shared progress variable
+  let progress = 0;
+
+  function increaseProgress(value) {
+    progress = Math.min(progress + value, 100);
+    updateUI();
+  }
+
+  function resetProgress() {
+    progress = 0;
+    updateUI();
+  }
+
+  function updateUI() {
+    // Progress Tracker bar
+    document.getElementById("progressFill").style.width = progress + "%";
+    document.getElementById("progressFill").innerText = progress + "%";
+
+    // Progress Summary text
+    document.getElementById("summaryText").innerText = "Current Progress: " + progress + "%";
+
+    // Update pie chart
+    studentChart.data.datasets[0].data = [progress, 100 - progress];
+    studentChart.update();
+  }
+
+  // Initialize charts
+  new Chart(document.getElementById("dailyProgress"), {
+    type: "line",
+    data: {
+      labels: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+      datasets: [{ label:"Daily Progress (%)", data:[20,40,50,70,60,80,90], borderColor:"#4a90e2", fill:false, tension:0.3 }]
+    }
+  });
+
+  new Chart(document.getElementById("subjectProgress"), {
+    type: "bar",
+    data: {
+      labels:["Math","Science","English","History"],
+      datasets:[{ label:"Completion (%)", data:[80,60,70,50], backgroundColor:["#4a90e2","#2ecc71","#f39c12","#e74c3c"] }]
+    }
+  });
+
+  // Pie chart for Progress Summary
+  const ctx = document.getElementById('studentChart').getContext('2d');
+  const studentChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Completed', 'Remaining'],
+      datasets: [{
+        data: [progress, 100 - progress],
+        backgroundColor: ['#27ae60','#e74c3c']
+      }]
+    },
+    options: {
+      plugins: { legend: { position: 'bottom' } }
+    }
+  });
+</script>
+
+</body>
+</html>

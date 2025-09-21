@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Dashboard — Digital Learning Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root{--bg:#f4f6fb;--card:#ffffff;--muted:#6b7280;--accent:#374151}
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;background:var(--bg);color:var(--accent)}
+    .app{display:flex;min-height:100vh}
+    .sidebar{width:270px;background:#0f172a;color:#fff;padding:20px;flex-shrink:0}
+    .brand{font-weight:700;font-size:18px;margin-bottom:18px}
+    .nav{list-style:none;padding:0;margin:10px 0}
+    .nav li{padding:10px;border-radius:8px;margin-bottom:6px;cursor:pointer}
+    .nav li:hover{background:rgba(255,255,255,0.06)}
+    .content{flex:1;padding:24px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .cards{display:flex;gap:14px;flex-wrap:wrap}
+    .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 14px rgba(16,24,40,0.06);min-width:180px;flex:1}
+    .card h3{margin:0;font-size:13px;color:var(--muted)}
+    .card p{font-size:20px;margin:6px 0 0;font-weight:600}
+    .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-top:18px}
+    .panel{background:var(--card);padding:14px;border-radius:10px}
+    .panel h4{margin:0 0 12px;font-size:16px}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left;font-size:14px}
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{background:#0b5fff;color:#fff;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid #e6eefc}
+    .small{font-size:13px;padding:6px 8px}
+    .footer-small{font-size:13px;color:var(--muted);margin-top:12px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.sidebar{display:none}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Digital Learning — Admin</div>
+      <nav>
+        <ul class="nav">
+          <li>School Reports</li>
+          <li>Active Student Analytics</li>
+          <li>Export Reports</li>
+          <li>Access Management</li>
+          <li>Notifications</li>
+          <li>Settings</li>
+          <li>Profile</li>
+          <li>Privacy</li>
+          <li>Support</li>
+        </ul>
+      </nav>
+      <div style="margin-top:18px;font-size:13px;color:#9ca3af">Logged in as <strong>Admin</strong></div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <h2>Admin Dashboard</h2>
+        <div class="controls">
+          <input type="search" id="globalSearch" placeholder="Search..." class="small" />
+          <button class="btn" onclick="openAddTeacher()">Add Teacher</button>
+        </div>
+      </div>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Overall School Performance</h3>
+          <p id="schoolPerf">78.6%</p>
+        </div>
+        <div class="card">
+          <h3>Active Students (30d)</h3>
+          <p id="activeStudents">1,248</p>
+        </div>
+        <div class="card">
+          <h3>Avg. Engagement / Student</h3>
+          <p id="avgEng">42m</p>
+        </div>
+        <div class="card">
+          <h3>Pending Tickets</h3>
+          <p id="tickets">6</p>
+        </div>
+      </section>
+
+      <div class="grid">
+        <div class="panel">
+          <h4>Active Student Analytics</h4>
+          <canvas id="activeChart" height="160"></canvas>
+
+          <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+            <button class="btn small" onclick="downloadPNG('activeChart','active-students.png')">Download Chart</button>
+            <div class="footer-small">Shows daily active students for the last 30 days and comparative analytics by class below.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h4>Engagement Metrics</h4>
+          <canvas id="engChart" height="160"></canvas>
+          <div style="margin-top:12px" class="footer-small">Average time spent and lessons accessed per day.</div>
+        </div>
+      </div>
+
+      <section style="margin-top:18px" class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h4>School Reports — Subject / Class-wise</h4>
+          <div>
+            <button class="btn small" onclick="exportTableToExcel('reportTable','school-report')">Export Excel</button>
+            <button class="btn small" onclick="exportPDF()">Export PDF</button>
+          </div>
+        </div>
+
+        <table id="reportTable" class="table" style="margin-top:12px">
+          <thead>
+            <tr><th>Class</th><th>Subject</th><th>Avg Score</th><th>Attendance %</th><th>Last Updated</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Grade 6</td><td>Math</td><td>72%</td><td>91%</td><td>2025-09-14</td></tr>
+            <tr><td>Grade 6</td><td>Science</td><td>76%</td><td>89%</td><td>2025-09-14</td></tr>
+            <tr><td>Grade 7</td><td>Math</td><td>69%</td><td>90%</td><td>2025-09-13</td></tr>
+            <tr><td>Grade 8</td><td>English</td><td>81%</td><td>94%</td><td>2025-09-12</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section style="margin-top:18px" class="panel">
+        <h4>Access Management</h4>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <button class="btn small" onclick="openAddTeacher()">Add / Remove Teachers</button>
+          <button class="btn small ghost" onclick="assignTeacher()">Assign Teachers to Classes</button>
+          <button class="btn small ghost" onclick="manageStudents()">Manage Student Accounts</button>
+        </div>
+        <div class="footer-small">Role permissions and bulk-import tools can be integrated here (CSV import, SSO, LDAP).</div>
+      </section>
+
+      <section style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap">
+        <div class="panel" style="flex:1;min-width:280px">
+          <h4>Notifications & Announcements</h4>
+          <p class="footer-small">Create platform updates, school-wide or class-wise notices, and automated performance alerts.</p>
+        </div>
+
+        <div class="panel" style="width:320px">
+          <h4>Support</h4>
+          <p class="footer-small">Ticket Queue: <strong id="ticketCount">6</strong></p>
+          <p class="footer-small">Live Chat: Available</p>
+        </div>
+      </section>
+
+      <footer style="margin-top:18px;color:var(--muted);font-size:13px">© 2025 Digital Learning Platform — Admin Panel</footer>
+    </main>
+  </div>
+
+  <!-- Simple modals & scripts -->
+  <script>
+    // Sample data & charts
+    const days = Array.from({length:30}, (_,i)=> i+1);
+    const activeData = days.map(i=> Math.floor(800 + Math.random()*600));
+    const ctx = document.getElementById('activeChart').getContext('2d');
+    const activeChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: days.map(d=>`Day ${d}`), datasets: [{label:'Active Students', data: activeData, fill:true, tension:0.3, borderWidth:2}]},
+      options: { responsive:true }
+    });
+
+    const engCtx = document.getElementById('engChart').getContext('2d');
+    const engChart = new Chart(engCtx, {
+      type:'bar',
+      data:{ labels:['Avg Time (min)','Lessons/day'], datasets:[{label:'Metric', data:[42,3], borderWidth:1}]},
+      options:{ responsive:true }
+    });
+
+    function downloadPNG(canvasId, filename){
+      const canvas = document.getElementById(canvasId);
+      const link = document.createElement('a');
+      link.href = canvas.toDataURL('image/png');
+      link.download = filename;
+      link.click();
+    }
+
+    // Export table to CSV/Excel (simple)
+    function exportTableToExcel(tableID, filename = ''){
+      const table = document.getElementById(tableID);
+      let csv = [];
+      for(const r of table.rows){
+        const row = Array.from(r.cells).map(c=> '"'+c.innerText.replace(/"/g,'""')+'"');
+        csv.push(row.join(','));
+      }
+      const csvString = csv.join('\n');
+      const blob = new Blob([csvString], {type:'text/csv;charset=utf-8;'});
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = (filename?filename+'.csv':'export.csv');
+      link.click();
+    }
+
+    // Export PDF (simple single-page using jsPDF)
+    async function exportPDF(){
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({orientation:'landscape'});
+      doc.setFontSize(14);
+      doc.text('School Reports — Subject / Class-wise', 14, 20);
+      // add table rows
+      const table = document.getElementById('reportTable');
+      let y = 30;
+      for(let i=0;i<table.tBodies[0].rows.length;i++){
+        const cells = table.tBodies[0].rows[i].cells;
+        const line = Array.from(cells).map(c=>c.innerText).join('   |   ');
+        doc.text(line, 14, y);
+        y += 8;
+        if(y>180){ doc.addPage(); y = 20; }
+      }
+      doc.save('school-report.pdf');
+    }
+
+    // Stubs for access management
+    function openAddTeacher(){ alert('Open Add Teacher modal (stub).') }
+    function assignTeacher(){ alert('Open Assign Teacher modal (stub).') }
+    function manageStudents(){ alert('Open Manage Students modal (stub).') }
+
+    // Wire search -> simple filter on table
+    document.getElementById('globalSearch').addEventListener('input', function(e){
+      const q = e.target.value.toLowerCase();
+      const rows = document.querySelectorAll('#reportTable tbody tr');
+      rows.forEach(r=> r.style.display = r.innerText.toLowerCase().includes(q)?'':'none');
+    });
+  </script>
+</body>
+</html>

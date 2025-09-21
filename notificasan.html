@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+    }
+
+    header {
+      background: #6c63ff;
+      color: white;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    .course {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .course:last-child {
+      border-bottom: none;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: white;
+    }
+
+    .status.ongoing {
+      background: #28a745;
+    }
+
+    .status.upcoming {
+      background: #007bff;
+    }
+
+    .status.pending {
+      background: #ff9800;
+    }
+  </style>
+</head>
+<body>
+
+  <header>📚 Course Dashboard</header>
+
+  <div class="container">
+    <!-- Upcoming Courses -->
+    <div class="card">
+      <h3>Upcoming Courses</h3>
+      <div class="course">
+        <strong>Data Structures</strong> <br>
+        Start Date: 25 Sept 2025
+        <span class="status upcoming">Upcoming</span>
+      </div>
+      <div class="course">
+        <strong>Web Development</strong> <br>
+        Start Date: 1 Oct 2025
+        <span class="status upcoming">Upcoming</span>
+      </div>
+      <div class="course">
+        <strong>Python Programming</strong> <br>
+        Start Date: 10 Oct 2025
+        <span class="status upcoming">Upcoming</span>
+      </div>
+    </div>
+
+    <!-- Upcoming Lectures -->
+    <div class="card">
+      <h3>Upcoming Lectures</h3>
+      <div class="course">
+        <strong>Math – Algebra</strong> <br>
+        Time: 3:00 PM, 18 Sept 2025
+        <span class="status pending">Pending</span>
+      </div>
+      <div class="course">
+        <strong>Science – Photosynthesis</strong> <br>
+        Time: 10:00 AM, 19 Sept 2025
+        <span class="status pending">Pending</span>
+      </div>
+      <div class="course">
+        <strong>English – Grammar Basics</strong> <br>
+        Time: 1:00 PM, 20 Sept 2025
+        <span class="status pending">Pending</span>
+      </div>
+    </div>
+
+    <!-- Ongoing Lecture -->
+    <div class="card" style="grid-column: span 2;">
+      <h3>Ongoing Lecture</h3>
+      <div class="course">
+        <strong>Physics – Newton’s Laws</strong> <br>
+        Time: 11:00 AM – 12:00 PM, 17 Sept 2025
+        <span class="status ongoing">Ongoing</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
